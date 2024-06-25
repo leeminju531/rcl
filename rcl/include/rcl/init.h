@@ -50,7 +50,7 @@ extern "C"
  *
  * The `options` argument must be non-`NULL` and must have been initialized
  * with rcl_init_options_init().
- * It is unmodified by this function, and the ownership is not transfered to
+ * It is unmodified by this function, and the ownership is not transferred to
  * the context, but instead a copy is made into the context for later reference.
  * Therefore, the given options need to be cleaned up with
  * rcl_init_options_fini() after this function returns.
