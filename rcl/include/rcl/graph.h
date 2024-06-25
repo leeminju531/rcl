@@ -971,6 +971,128 @@ rcl_get_subscriptions_info_by_topic(
   bool no_mangle,
   rcl_topic_endpoint_info_array_t * subscriptions_info);
 
+/// Return a list of all clients to a service.
+/**
+ * The `node` parameter must point to a valid node.
+ *
+ * The `service_name` parameter must not be `NULL`.
+ *
+ * When the `no_mangle` parameter is `true`, the provided `service_name` should be a valid name
+ * for the middleware (useful when combining ROS with native middleware (e.g. DDS) apps).
+ * When the `no_mangle` parameter is `false`, the provided `service_name` should follow
+ * ROS topic name conventions.
+ * In either case, the service name should always be fully qualified.
+ *
+ * Each element in the `clients_info` array will contain the node name, node namespace,
+ * service type, gid and the qos profile of the client.
+ * It is the responsibility of the caller to ensure that `clients_info` parameter points
+ * to a valid struct of type rcl_topic_endpoint_info_array_t.
+ * The `count` field inside the struct must be set to 0 and the `info_array` field inside
+ * the struct must be set to null.
+ * \see rmw_get_zero_initialized_topic_endpoint_info_array
+ *
+ * The `allocator` will be used to allocate memory to the `info_array` member
+ * inside of `clients_info`.
+ * Moreover, every const char * member inside of
+ * rmw_topic_endpoint_info_t will be assigned a copied value on allocated memory.
+ * \see rmw_topic_endpoint_info_set_node_name and the likes.
+ * However, it is the responsibility of the caller to
+ * reclaim any allocated resources to `clients_info` to avoid leaking memory.
+ * \see rmw_topic_endpoint_info_array_fini
+ *
+ * <hr>
+ * Attribute          | Adherence
+ * ------------------ | -------------
+ * Allocates Memory   | Yes
+ * Thread-Safe        | No
+ * Uses Atomics       | No
+ * Lock-Free          | Maybe [1]
+ * <i>[1] implementation may need to protect the data structure with a lock</i>
+ *
+ * \param[in] node the handle to the node being used to query the ROS graph
+ * \param[in] allocator allocator to be used when allocating space for
+ *            the array inside clients_info
+ * \param[in] service_name the name of the service in question
+ * \param[in] no_mangle if `true`, `service_name` needs to be a valid middleware topic name,
+ *            otherwise it should be a valid ROS topic name
+ * \param[out] clients_info a struct representing a list of client information
+ * \return #RCL_RET_OK if the query was successful, or
+ * \return #RCL_RET_NODE_INVALID if the node is invalid, or
+ * \return #RCL_RET_INVALID_ARGUMENT if any arguments are invalid, or
+ * \return #RCL_RET_BAD_ALLOC if memory allocation fails, or
+ * \return #RCL_RET_ERROR if an unspecified error occurs.
+ */
+RCL_PUBLIC
+RCL_WARN_UNUSED
+rcl_ret_t
+rcl_get_clients_info_by_service(
+  const rcl_node_t * node,
+  rcutils_allocator_t * allocator,
+  const char * service_name,
+  bool no_mangle,
+  rcl_topic_endpoint_info_array_t * clients_info);
+
+/// Return a list of all servers to a service.
+/**
+ * The `node` parameter must point to a valid node.
+ *
+ * The `service_name` parameter must not be `NULL`.
+ *
+ * When the `no_mangle` parameter is `true`, the provided `service_name` should be a valid name
+ * for the middleware (useful when combining ROS with native middleware (e.g. DDS) apps).
+ * When the `no_mangle` parameter is `false`, the provided `service_name` should follow
+ * ROS topic name conventions.
+ * In either case, the service name should always be fully qualified.
+ *
+ * Each element in the `servers_info` array will contain the node name, node namespace,
+ * service type, gid and the qos profile of the server.
+ * It is the responsibility of the caller to ensure that `servers_info` parameter points
+ * to a valid struct of type rcl_topic_endpoint_info_array_t.
+ * The `count` field inside the struct must be set to 0 and the `info_array` field inside
+ * the struct must be set to null.
+ * \see rmw_get_zero_initialized_topic_endpoint_info_array
+ *
+ * The `allocator` will be used to allocate memory to the `info_array` member
+ * inside of `servers_info`.
+ * Moreover, every const char * member inside of
+ * rmw_topic_endpoint_info_t will be assigned a copied value on allocated memory.
+ * \see rmw_topic_endpoint_info_set_node_name and the likes.
+ * However, it is the responsibility of the caller to
+ * reclaim any allocated resources to `servers_info` to avoid leaking memory.
+ * \see rmw_topic_endpoint_info_array_fini
+ *
+ * <hr>
+ * Attribute          | Adherence
+ * ------------------ | -------------
+ * Allocates Memory   | Yes
+ * Thread-Safe        | No
+ * Uses Atomics       | No
+ * Lock-Free          | Maybe [1]
+ * <i>[1] implementation may need to protect the data structure with a lock</i>
+ *
+ * \param[in] node the handle to the node being used to query the ROS graph
+ * \param[in] allocator allocator to be used when allocating space for
+ *            the array inside clients_info
+ * \param[in] service_name the name of the service in question
+ * \param[in] no_mangle if `true`, `service_name` needs to be a valid middleware topic name,
+ *            otherwise it should be a valid ROS topic name
+ * \param[out] servers_info a struct representing a list of server information
+ * \return #RCL_RET_OK if the query was successful, or
+ * \return #RCL_RET_NODE_INVALID if the node is invalid, or
+ * \return #RCL_RET_INVALID_ARGUMENT if any arguments are invalid, or
+ * \return #RCL_RET_BAD_ALLOC if memory allocation fails, or
+ * \return #RCL_RET_ERROR if an unspecified error occurs.
+ */
+RCL_PUBLIC
+RCL_WARN_UNUSED
+rcl_ret_t
+rcl_get_servers_info_by_service(
+  const rcl_node_t * node,
+  rcutils_allocator_t * allocator,
+  const char * service_name,
+  bool no_mangle,
+  rcl_topic_endpoint_info_array_t * servers_info);
+
 /// Check if a service server is available for the given service client.
 /**
  * This function will return true for `is_available` if there is a service server

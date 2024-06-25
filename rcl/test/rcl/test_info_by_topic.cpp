@@ -30,6 +30,7 @@
 #include "wait_for_entity_helpers.hpp"
 
 #include "test_msgs/msg/strings.h"
+#include "test_msgs/srv/basic_types.h"
 #include "rosidl_runtime_c/string_functions.h"
 
 #include "osrf_testing_tools_cpp/scope_exit.hpp"
@@ -44,6 +45,7 @@ public:
   const char * test_graph_node_name = "test_graph_node";
   rmw_topic_endpoint_info_array_t topic_endpoint_info_array;
   const char * const topic_name = "valid_topic_name";
+  const char * const service_name = "valid_service_name";
 
   void SetUp()
   {
@@ -153,6 +155,34 @@ TEST_F(TestInfoByTopicFixture, test_rcl_get_subscriptions_info_by_topic_null_nod
  * This does not test content of the response.
  * It only tests if the return code is the one expected.
  */
+TEST_F(TestInfoByTopicFixture, test_rcl_get_clients_info_by_service_null_node)
+{
+  rcl_allocator_t allocator = rcl_get_default_allocator();
+  const auto ret = rcl_get_clients_info_by_service(
+    nullptr, &allocator, this->service_name, false,
+    &this->topic_endpoint_info_array);
+  EXPECT_EQ(RCL_RET_NODE_INVALID, ret);
+  rcl_reset_error();
+}
+
+/*
+ * This does not test content of the response.
+ * It only tests if the return code is the one expected.
+ */
+TEST_F(TestInfoByTopicFixture, test_rcl_get_servers_info_by_service_null_node)
+{
+  rcl_allocator_t allocator = rcl_get_default_allocator();
+  const auto ret = rcl_get_servers_info_by_service(
+    nullptr, &allocator, this->service_name, false,
+    &this->topic_endpoint_info_array);
+  EXPECT_EQ(RCL_RET_NODE_INVALID, ret);
+  rcl_reset_error();
+}
+
+/*
+ * This does not test content of the response.
+ * It only tests if the return code is the one expected.
+ */
 TEST_F(TestInfoByTopicFixture, test_rcl_get_publishers_info_by_topic_invalid_node)
 {
   // this->old_node is an invalid node.
@@ -174,6 +204,36 @@ TEST_F(TestInfoByTopicFixture, test_rcl_get_subscriptions_info_by_topic_invalid_
   rcl_allocator_t allocator = rcl_get_default_allocator();
   const auto ret = rcl_get_subscriptions_info_by_topic(
     &this->old_node, &allocator, this->topic_name, false,
+    &this->topic_endpoint_info_array);
+  EXPECT_EQ(RCL_RET_NODE_INVALID, ret);
+  rcl_reset_error();
+}
+
+/*
+ * This does not test content of the response.
+ * It only tests if the return code is the one expected.
+ */
+TEST_F(TestInfoByTopicFixture, test_rcl_get_clients_info_by_service_invalid_node)
+{
+  // this->old_node is an invalid node.
+  rcl_allocator_t allocator = rcl_get_default_allocator();
+  const auto ret = rcl_get_clients_info_by_service(
+    &this->old_node, &allocator, this->service_name, false,
+    &this->topic_endpoint_info_array);
+  EXPECT_EQ(RCL_RET_NODE_INVALID, ret);
+  rcl_reset_error();
+}
+
+/*
+ * This does not test content of the response.
+ * It only tests if the return code is the one expected.
+ */
+TEST_F(TestInfoByTopicFixture, test_rcl_get_servers_info_by_service_invalid_node)
+{
+  // this->old_node is an invalid node.
+  rcl_allocator_t allocator = rcl_get_default_allocator();
+  const auto ret = rcl_get_servers_info_by_service(
+    &this->old_node, &allocator, this->service_name, false,
     &this->topic_endpoint_info_array);
   EXPECT_EQ(RCL_RET_NODE_INVALID, ret);
   rcl_reset_error();
@@ -209,6 +269,32 @@ TEST_F(TestInfoByTopicFixture, test_rcl_get_subscriptions_info_by_topic_null_all
  * This does not test content of the response.
  * It only tests if the return code is the one expected.
  */
+TEST_F(TestInfoByTopicFixture, test_rcl_get_clients_info_by_service_null_allocator)
+{
+  const auto ret = rcl_get_clients_info_by_service(
+    &this->node, nullptr, this->service_name, false,
+    &this->topic_endpoint_info_array);
+  EXPECT_EQ(RCL_RET_INVALID_ARGUMENT, ret);
+  rcl_reset_error();
+}
+
+/*
+ * This does not test content of the response.
+ * It only tests if the return code is the one expected.
+ */
+TEST_F(TestInfoByTopicFixture, test_rcl_get_servers_info_by_service_null_allocator)
+{
+  const auto ret = rcl_get_servers_info_by_service(
+    &this->node, nullptr, this->service_name, false,
+    &this->topic_endpoint_info_array);
+  EXPECT_EQ(RCL_RET_INVALID_ARGUMENT, ret);
+  rcl_reset_error();
+}
+
+/*
+ * This does not test content of the response.
+ * It only tests if the return code is the one expected.
+ */
 TEST_F(TestInfoByTopicFixture, test_rcl_get_publishers_info_by_topic_null_topic)
 {
   rcl_allocator_t allocator = rcl_get_default_allocator();
@@ -226,6 +312,32 @@ TEST_F(TestInfoByTopicFixture, test_rcl_get_subscriptions_info_by_topic_null_top
 {
   rcl_allocator_t allocator = rcl_get_default_allocator();
   const auto ret = rcl_get_subscriptions_info_by_topic(
+    &this->node, &allocator, nullptr, false, &this->topic_endpoint_info_array);
+  EXPECT_EQ(RCL_RET_INVALID_ARGUMENT, ret);
+  rcl_reset_error();
+}
+
+/*
+ * This does not test content of the response.
+ * It only tests if the return code is the one expected.
+ */
+TEST_F(TestInfoByTopicFixture, test_rcl_get_clients_info_by_service_null_service)
+{
+  rcl_allocator_t allocator = rcl_get_default_allocator();
+  const auto ret = rcl_get_clients_info_by_service(
+    &this->node, &allocator, nullptr, false, &this->topic_endpoint_info_array);
+  EXPECT_EQ(RCL_RET_INVALID_ARGUMENT, ret);
+  rcl_reset_error();
+}
+
+/*
+ * This does not test content of the response.
+ * It only tests if the return code is the one expected.
+ */
+TEST_F(TestInfoByTopicFixture, test_rcl_get_servers_info_by_service_null_service)
+{
+  rcl_allocator_t allocator = rcl_get_default_allocator();
+  const auto ret = rcl_get_servers_info_by_service(
     &this->node, &allocator, nullptr, false, &this->topic_endpoint_info_array);
   EXPECT_EQ(RCL_RET_INVALID_ARGUMENT, ret);
   rcl_reset_error();
@@ -253,6 +365,32 @@ TEST_F(TestInfoByTopicFixture, test_rcl_get_subscriptions_info_by_topic_null_par
   rcl_allocator_t allocator = rcl_get_default_allocator();
   const auto ret = rcl_get_subscriptions_info_by_topic(
     &this->node, &allocator, this->topic_name, false, nullptr);
+  EXPECT_EQ(RCL_RET_INVALID_ARGUMENT, ret);
+  rcl_reset_error();
+}
+
+/*
+ * This does not test content of the response.
+ * It only tests if the return code is the one expected.
+ */
+TEST_F(TestInfoByTopicFixture, test_rcl_get_clients_info_by_service_null_participants)
+{
+  rcl_allocator_t allocator = rcl_get_default_allocator();
+  const auto ret = rcl_get_clients_info_by_service(
+    &this->node, &allocator, this->service_name, false, nullptr);
+  EXPECT_EQ(RCL_RET_INVALID_ARGUMENT, ret);
+  rcl_reset_error();
+}
+
+/*
+ * This does not test content of the response.
+ * It only tests if the return code is the one expected.
+ */
+TEST_F(TestInfoByTopicFixture, test_rcl_get_servers_info_by_service_null_participants)
+{
+  rcl_allocator_t allocator = rcl_get_default_allocator();
+  const auto ret = rcl_get_servers_info_by_service(
+    &this->node, &allocator, this->service_name, false, nullptr);
   EXPECT_EQ(RCL_RET_INVALID_ARGUMENT, ret);
   rcl_reset_error();
 }
@@ -294,6 +432,48 @@ TEST_F(TestInfoByTopicFixture, test_rcl_get_subscriptions_info_by_topic_invalid_
   rcl_allocator_t allocator = rcl_get_default_allocator();
   const auto ret = rcl_get_subscriptions_info_by_topic(
     &this->node, &allocator, this->topic_name, false,
+    &this->topic_endpoint_info_array);
+  EXPECT_EQ(RCL_RET_ERROR, ret);
+  rcl_reset_error();
+}
+
+/*
+ * This does not test content of the response.
+ * It only tests if the return code is the one expected.
+ */
+TEST_F(TestInfoByTopicFixture, test_rcl_get_clients_info_by_service_invalid_participants)
+{
+  // topic_endpoint_info_array is invalid because it is expected to be zero initialized
+  // and the info_array variable inside it is expected to be null.
+  this->topic_endpoint_info_array.info_array = new rmw_topic_endpoint_info_t();
+  OSRF_TESTING_TOOLS_CPP_SCOPE_EXIT(
+  {
+    delete this->topic_endpoint_info_array.info_array;
+  });
+  rcl_allocator_t allocator = rcl_get_default_allocator();
+  const auto ret = rcl_get_clients_info_by_service(
+    &this->node, &allocator, this->service_name, false,
+    &this->topic_endpoint_info_array);
+  EXPECT_EQ(RCL_RET_ERROR, ret);
+  rcl_reset_error();
+}
+
+/*
+ * This does not test content of the response.
+ * It only tests if the return code is the one expected.
+ */
+TEST_F(TestInfoByTopicFixture, test_rcl_get_servers_info_by_service_invalid_participants)
+{
+  // topic_endpoint_info_array is invalid because it is expected to be zero initialized
+  // and the info_array variable inside it is expected to be null.
+  this->topic_endpoint_info_array.info_array = new rmw_topic_endpoint_info_t();
+  OSRF_TESTING_TOOLS_CPP_SCOPE_EXIT(
+  {
+    delete this->topic_endpoint_info_array.info_array;
+  });
+  rcl_allocator_t allocator = rcl_get_default_allocator();
+  const auto ret = rcl_get_servers_info_by_service(
+    &this->node, &allocator, this->service_name, false,
     &this->topic_endpoint_info_array);
   EXPECT_EQ(RCL_RET_ERROR, ret);
   rcl_reset_error();
@@ -386,5 +566,115 @@ TEST_F(TestInfoByTopicFixture, test_rcl_get_publishers_subscription_info_by_topi
   ret = rcl_subscription_fini(&subscription, &this->node);
   EXPECT_EQ(ret, RCL_RET_OK) << rcl_get_error_string().str;
   ret = rcl_publisher_fini(&publisher, &this->node);
+  EXPECT_EQ(ret, RCL_RET_OK) << rcl_get_error_string().str;
+}
+
+TEST_F(TestInfoByTopicFixture, test_rcl_get_client_server_info_by_service)
+{
+  rmw_qos_profile_t default_qos_profile = rmw_qos_profile_system_default;
+  default_qos_profile.history = RMW_QOS_POLICY_HISTORY_KEEP_LAST;
+  default_qos_profile.depth = 0;
+  default_qos_profile.reliability = RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT;
+  default_qos_profile.durability = RMW_QOS_POLICY_DURABILITY_VOLATILE;
+  default_qos_profile.lifespan = {10, 0};
+  default_qos_profile.deadline = {11, 0};
+  default_qos_profile.liveliness_lease_duration = {20, 0};
+  default_qos_profile.liveliness = RMW_QOS_POLICY_LIVELINESS_MANUAL_BY_TOPIC;
+
+  rcl_ret_t ret;
+  const rosidl_service_type_support_t * ts = ROSIDL_GET_SRV_TYPE_SUPPORT(
+    test_msgs, srv, BasicTypes);
+  rcl_allocator_t allocator = rcl_get_default_allocator();
+
+  rcl_client_t client = rcl_get_zero_initialized_client();
+  rcl_client_options_t client_options = rcl_client_get_default_options();
+  client_options.qos = default_qos_profile;
+  ret = rcl_client_init(
+    &client,
+    &this->node,
+    ts,
+    this->service_name,
+    &client_options
+  );
+  ASSERT_EQ(ret, RCL_RET_OK) << rcl_get_error_string().str;
+
+  rcl_service_t server = rcl_get_zero_initialized_service();
+  rcl_service_options_t server_options = rcl_service_get_default_options();
+  server_options.qos = default_qos_profile;
+  ret = rcl_service_init(
+    &server,
+    &this->node,
+    ts,
+    this->service_name,
+    &server_options
+  );
+  ASSERT_EQ(ret, RCL_RET_OK) << rcl_get_error_string().str;
+
+  const std::string fqdn = std::string("/") + this->service_name;
+  // Wait until GraphCache clients are updated
+  bool success = false;
+  ret = rcl_wait_for_clients(
+    &this->node, &allocator, fqdn.c_str(), 1u, RCUTILS_S_TO_NS(1), &success);
+  ASSERT_EQ(ret, RCL_RET_OK);
+  ASSERT_TRUE(success);
+  // Get clients info by service
+  rmw_topic_endpoint_info_array_t topic_endpoint_info_array_client =
+    rmw_get_zero_initialized_topic_endpoint_info_array();
+  ret = rcl_get_clients_info_by_service(
+    &this->node, &allocator, fqdn.c_str(), false,
+    &topic_endpoint_info_array_client
+  );
+  EXPECT_EQ(ret, RCL_RET_OK) << rcl_get_error_string().str;
+  EXPECT_GE(topic_endpoint_info_array_client.size, 1u) << "Expected at least one topic info";
+  rmw_topic_endpoint_info_t topic_endpoint_info_client;
+  for(size_t i = 0; i < topic_endpoint_info_array_client.size; i++) {
+    topic_endpoint_info_client = topic_endpoint_info_array_client.info_array[i];
+    EXPECT_STREQ(topic_endpoint_info_client.node_name, this->test_graph_node_name);
+    EXPECT_STREQ(topic_endpoint_info_client.node_namespace, "/");
+    if(topic_endpoint_info_client.endpoint_type == RMW_ENDPOINT_PUBLISHER) {
+      EXPECT_STREQ(topic_endpoint_info_client.topic_type, "test_msgs/srv/BasicTypes_Request");
+      assert_qos_equality(topic_endpoint_info_client.qos_profile, default_qos_profile, true);
+    } else if(topic_endpoint_info_client.endpoint_type == RMW_ENDPOINT_SUBSCRIPTION) {
+      EXPECT_STREQ(topic_endpoint_info_client.topic_type, "test_msgs/srv/BasicTypes_Response");
+      assert_qos_equality(topic_endpoint_info_client.qos_profile, default_qos_profile, false);
+    }
+  }
+  // Wait until GraphCache servers are updated
+  success = false;
+  ret = rcl_wait_for_services(
+    &this->node, &allocator, fqdn.c_str(), 1u, RCUTILS_S_TO_NS(1), &success);
+  ASSERT_EQ(ret, RCL_RET_OK);
+  ASSERT_TRUE(success);
+  // Get servers info by service
+  rmw_topic_endpoint_info_array_t topic_endpoint_info_array_server =
+    rmw_get_zero_initialized_topic_endpoint_info_array();
+  ret = rcl_get_servers_info_by_service(
+    &this->node, &allocator, fqdn.c_str(), false,
+    &topic_endpoint_info_array_server
+  );
+  EXPECT_EQ(ret, RCL_RET_OK) << rcl_get_error_string().str;
+  EXPECT_GE(topic_endpoint_info_array_server.size, 1u) << "Expected at least one topic info";
+  rmw_topic_endpoint_info_t topic_endpoint_info_server;
+  for(size_t i = 0; i < topic_endpoint_info_array_server.size; i++) {
+    topic_endpoint_info_server = topic_endpoint_info_array_server.info_array[i];
+    EXPECT_STREQ(topic_endpoint_info_server.node_name, this->test_graph_node_name);
+    EXPECT_STREQ(topic_endpoint_info_server.node_namespace, "/");
+    if(topic_endpoint_info_server.endpoint_type == RMW_ENDPOINT_PUBLISHER) {
+      EXPECT_STREQ(topic_endpoint_info_server.topic_type, "test_msgs/srv/BasicTypes_Response");
+      assert_qos_equality(topic_endpoint_info_server.qos_profile, default_qos_profile, true);
+    } else if(topic_endpoint_info_server.endpoint_type == RMW_ENDPOINT_SUBSCRIPTION) {
+      EXPECT_STREQ(topic_endpoint_info_server.topic_type, "test_msgs/srv/BasicTypes_Request");
+      assert_qos_equality(topic_endpoint_info_server.qos_profile, default_qos_profile, false);
+    }
+  }
+  // clean up
+  rmw_ret_t rmw_ret =
+    rmw_topic_endpoint_info_array_fini(&topic_endpoint_info_array_client, &allocator);
+  EXPECT_EQ(rmw_ret, RMW_RET_OK) << rmw_get_error_string().str;
+  rmw_ret = rmw_topic_endpoint_info_array_fini(&topic_endpoint_info_array_server, &allocator);
+  EXPECT_EQ(rmw_ret, RMW_RET_OK) << rmw_get_error_string().str;
+  ret = rcl_client_fini(&client, &this->node);
+  EXPECT_EQ(ret, RCL_RET_OK) << rcl_get_error_string().str;
+  ret = rcl_service_fini(&server, &this->node);
   EXPECT_EQ(ret, RCL_RET_OK) << rcl_get_error_string().str;
 }

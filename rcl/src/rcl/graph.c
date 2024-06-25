@@ -790,6 +790,40 @@ rcl_get_subscriptions_info_by_topic(
 }
 
 rcl_ret_t
+rcl_get_clients_info_by_service(
+  const rcl_node_t * node,
+  rcutils_allocator_t * allocator,
+  const char * service_name,
+  bool no_mangle,
+  rmw_topic_endpoint_info_array_t * clients_info)
+{
+  return __rcl_get_info_by_topic(
+    node,
+    allocator,
+    service_name,
+    no_mangle,
+    clients_info,
+    rmw_get_clients_info_by_service);
+}
+
+rcl_ret_t
+rcl_get_servers_info_by_service(
+  const rcl_node_t * node,
+  rcutils_allocator_t * allocator,
+  const char * service_name,
+  bool no_mangle,
+  rmw_topic_endpoint_info_array_t * servers_info)
+{
+  return __rcl_get_info_by_topic(
+    node,
+    allocator,
+    service_name,
+    no_mangle,
+    servers_info,
+    rmw_get_servers_info_by_service);
+}
+
+rcl_ret_t
 rcl_service_server_is_available(
   const rcl_node_t * node,
   const rcl_client_t * client,
