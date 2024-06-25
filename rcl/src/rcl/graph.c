@@ -667,6 +667,44 @@ rcl_wait_for_subscribers(
     rcl_count_subscribers);
 }
 
+rcl_ret_t
+rcl_wait_for_clients(
+  const rcl_node_t * node,
+  rcl_allocator_t * allocator,
+  const char * service_name,
+  const size_t expected_count,
+  rcutils_duration_value_t timeout,
+  bool * success)
+{
+  return _rcl_wait_for_entities(
+    node,
+    allocator,
+    service_name,
+    expected_count,
+    timeout,
+    success,
+    rcl_count_clients);
+}
+
+rcl_ret_t
+rcl_wait_for_services(
+  const rcl_node_t * node,
+  rcl_allocator_t * allocator,
+  const char * service_name,
+  const size_t expected_count,
+  rcutils_duration_value_t timeout,
+  bool * success)
+{
+  return _rcl_wait_for_entities(
+    node,
+    allocator,
+    service_name,
+    expected_count,
+    timeout,
+    success,
+    rcl_count_services);
+}
+
 typedef rmw_ret_t (* get_topic_endpoint_info_func_t)(
   const rmw_node_t * node,
   rcutils_allocator_t * allocator,

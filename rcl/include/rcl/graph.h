@@ -775,6 +775,80 @@ rcl_wait_for_subscribers(
   rcutils_duration_value_t timeout,
   bool * success);
 
+/// Wait for there to be a specified number of clients on a given service.
+/**
+ * \see rcl_wait_for_publishers
+ *
+ * <hr>
+ * Attribute          | Adherence
+ * ------------------ | -------------
+ * Allocates Memory   | Yes
+ * Thread-Safe        | No
+ * Uses Atomics       | No
+ * Lock-Free          | Maybe [1]
+ * <i>[1] implementation may need to protect the data structure with a lock</i>
+ *
+ * \param[in] node the handle to the node being used to query the ROS graph
+ * \param[in] allocator to allocate space for the rcl_wait_set_t used to wait for graph events
+ * \param[in] service_name the name of the topic in question
+ * \param[in] count number of clients to wait for
+ * \param[in] timeout maximum duration to wait for clients
+ * \param[out] success `true` if the number of clients is equal to or greater than count, or
+ *   `false` if a timeout occurred waiting for clients.
+ * \return #RCL_RET_OK if there was no errors, or
+ * \return #RCL_RET_NODE_INVALID if the node is invalid, or
+ * \return #RCL_RET_INVALID_ARGUMENT if any arguments are invalid, or
+ * \return #RCL_RET_TIMEOUT if a timeout occurs before the number of clients is detected, or
+ * \return #RCL_RET_ERROR if an unspecified error occurred.
+ */
+RCL_PUBLIC
+RCL_WARN_UNUSED
+rcl_ret_t
+rcl_wait_for_clients(
+  const rcl_node_t * node,
+  rcl_allocator_t * allocator,
+  const char * service_name,
+  const size_t count,
+  rcutils_duration_value_t timeout,
+  bool * success);
+
+/// Wait for there to be a specified number of servers on a given service.
+/**
+ * \see rcl_wait_for_publishers
+ *
+ * <hr>
+ * Attribute          | Adherence
+ * ------------------ | -------------
+ * Allocates Memory   | Yes
+ * Thread-Safe        | No
+ * Uses Atomics       | No
+ * Lock-Free          | Maybe [1]
+ * <i>[1] implementation may need to protect the data structure with a lock</i>
+ *
+ * \param[in] node the handle to the node being used to query the ROS graph
+ * \param[in] allocator to allocate space for the rcl_wait_set_t used to wait for graph events
+ * \param[in] service_name the name of the topic in question
+ * \param[in] count number of servers to wait for
+ * \param[in] timeout maximum duration to wait for servers
+ * \param[out] success `true` if the number of servers is equal to or greater than count, or
+ *   `false` if a timeout occurred waiting for servers.
+ * \return #RCL_RET_OK if there was no errors, or
+ * \return #RCL_RET_NODE_INVALID if the node is invalid, or
+ * \return #RCL_RET_INVALID_ARGUMENT if any arguments are invalid, or
+ * \return #RCL_RET_TIMEOUT if a timeout occurs before the number of servers is detected, or
+ * \return #RCL_RET_ERROR if an unspecified error occurred.
+ */
+RCL_PUBLIC
+RCL_WARN_UNUSED
+rcl_ret_t
+rcl_wait_for_services(
+  const rcl_node_t * node,
+  rcl_allocator_t * allocator,
+  const char * service_name,
+  const size_t count,
+  rcutils_duration_value_t timeout,
+  bool * success);
+
 /// Return a list of all publishers to a topic.
 /**
  * The `node` parameter must point to a valid node.
